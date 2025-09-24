@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=Cursive" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -19,8 +19,8 @@
             align-items: center;
             min-height: 100vh;
             background-color: #F8F4F0;
-            overflow: hidden;
-            cursor: none; /* Menyembunyikan kursor mouse bawaan */
+            overflow-x: hidden;
+            cursor: none;
         }
 
         .container {
@@ -64,14 +64,13 @@
             }
         }
 
-        /* Gaya baru untuk aura mouse */
         .mouse-aura {
             position: absolute;
-            color: #ffcccc; /* Warna pink muda untuk aura */
+            color: #ffcccc;
             font-size: 25px;
             pointer-events: none;
             opacity: 0;
-            transform: translate(-50%, -50%); /* Memposisikan di tengah kursor */
+            transform: translate(-50%, -50%);
             animation: fadeAndShrink 1s forwards;
             z-index: 100;
         }
@@ -80,7 +79,6 @@
             0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
         }
-
 
         .page {
             position: absolute;
@@ -436,7 +434,7 @@
             100% { transform: scale(1); }
         }
         
-        /* --- Media Queries untuk Layar HP (maks 600px) --- */
+        /* Media Queries untuk Layar HP (maks 600px) */
         @media (max-width: 600px) {
             body {
                 overflow-x: hidden;
@@ -461,7 +459,7 @@
                 width: 90%;
                 height: auto;
                 position: static;
-                transform: none;
+                transform: none !important;
                 margin-top: 30px;
                 animation: none;
             }
@@ -632,7 +630,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('intro-page').classList.add('visible');
-            createHeartParticles(); 
+            if (window.innerWidth > 600) {
+                createHeartParticles();
+            }
         });
 
         function transitionPage(fromId, toId) {
@@ -727,24 +727,25 @@
             }
         }
 
-        // --- Fungsi untuk Aura Hati yang Mengikuti Mouse ---
-        document.addEventListener('mousemove', (e) => {
-            const aura = document.createElement('span');
-            aura.classList.add('mouse-aura');
-            
-            const characters = ['❤️', '💖', '✨', '🌟'];
-            aura.innerHTML = characters[Math.floor(Math.random() * characters.length)]; 
-            
-            aura.style.left = e.clientX + 'px';
-            aura.style.top = e.clientY + 'px';
-            
-            document.body.appendChild(aura);
-            
-            // Hapus partikel setelah animasinya selesai
-            aura.addEventListener('animationend', () => {
-                aura.remove();
+        // --- Fungsi untuk Aura Hati yang Mengikuti Mouse (Hanya untuk desktop) ---
+        if (window.innerWidth > 600) {
+            document.addEventListener('mousemove', (e) => {
+                const aura = document.createElement('span');
+                aura.classList.add('mouse-aura');
+                
+                const characters = ['❤️', '💖', '✨', '🌟'];
+                aura.innerHTML = characters[Math.floor(Math.random() * characters.length)]; 
+                
+                aura.style.left = e.clientX + 'px';
+                aura.style.top = e.clientY + 'px';
+                
+                document.body.appendChild(aura);
+                
+                aura.addEventListener('animationend', () => {
+                    aura.remove();
+                });
             });
-        });
+        }
     </script>
 </body>
 </html>
