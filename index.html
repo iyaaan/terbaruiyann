@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Cintaku</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=Cursive" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            color: #4A2424;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #F8F4F0;
+            overflow: hidden;
+            cursor: none; /* Menyembunyikan kursor mouse bawaan */
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #D34C4C;
+            transition: opacity 1s ease-in-out;
+            overflow: hidden;
+        }
+        
+        .hearts-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0; 
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: #F8F4F0; 
+            font-size: 20px;
+            opacity: 0;
+            animation: floatHeart 10s infinite ease-in-out;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translate(0, 0) scale(0) rotate(0deg); opacity: 0; }
+            10% { opacity: var(--initial-opacity); } 
+            80% { opacity: var(--initial-opacity); }
+            100% { 
+                transform: translate(var(--x-end), var(--y-end)) scale(var(--scale-end)) rotate(var(--rotate-end)); 
+                opacity: 0; 
+            }
+        }
+
+        /* Gaya baru untuk aura mouse */
+        .mouse-aura {
+            position: absolute;
+            color: #ffcccc; /* Warna pink muda untuk aura */
+            font-size: 25px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -50%); /* Memposisikan di tengah kursor */
+            animation: fadeAndShrink 1s forwards;
+            z-index: 100;
+        }
+
+        @keyframes fadeAndShrink {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        }
+
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            z-index: 2; 
+        }
+
+        .page.visible {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 6rem;
+            color: #F8F4F0;
+            margin: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .intro-text, .message-text, .question-text, .result-text {
+            animation: fadeIn 1s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .envelope-container {
+            position: absolute;
+            width: 500px;
+            height: 350px;
+            bottom: -50px;
+            right: -50px;
+            transform: rotate(-10deg);
+            animation: slideUp 1s ease-out forwards;
+            animation-delay: 1s;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #F8F4E6;
+            border: 4px solid #9C6A2E;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .seal {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #D34C4C;
+            border-radius: 50%;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid #4A2424;
+        }
+
+        .seal-hole {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #F8F4E6;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .paper {
+            position: absolute;
+            width: 70%;
+            height: 80%;
+            background-color: #FFFFFF;
+            border: 1px solid #C0C0C0;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+            top: -20%;
+            left: 15%;
+            transform: rotate(-5deg);
+            z-index: 10;
+        }
+        
+        #question-page .paper-container {
+            position: relative;
+            width: 500px;
+            height: 400px;
+            transform: rotate(-5deg);
+        }
+
+        #question-page .paper {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .paper-lines {
+            position: absolute;
+            width: 90%;
+            height: 100%;
+            top: 0;
+            left: 5%;
+            background-image: linear-gradient(to bottom, transparent 24px, #ADD8E6 25px);
+            background-size: 100% 25px;
+        }
+
+        .paper-hole-row {
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            background-color: #FFFFFF;
+            left: -5px;
+            top: 0;
+            z-index: 11;
+        }
+
+        .paper-hole-row::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background-image: radial-gradient(circle at center, transparent 3px, #F0F0F0 4px);
+            background-size: 100% 25px;
+            transform: translateX(-50%);
+            background-position: center;
+        }
+
+        .paper-message {
+            position: absolute;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #4A2424;
+            font-family: 'Dancing Script', cursive;
+            line-height: 1.2;
+        }
+
+        .paper-message h2 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .paper-message p {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        #question-page .paper-message p {
+            font-size: 2.5rem;
+            line-height: 1.5;
+        }
+
+        #question-page .paper-message span.heart {
+            font-size: 4rem;
+        }
+
+        #result-page-sudah .paper {
+            position: relative;
+            width: 500px;
+            height: 400px;
+            background-color: #F8F4E6;
+            border: 4px solid #9C6A2E;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+            top: auto;
+            left: auto;
+            transform: none;
+        }
+
+        #result-page-sudah .paper-message {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0;
+        }
+        
+        #result-page-sudah .paper-message p {
+            font-size: 2.5rem;
+            padding: 0 20px;
+        }
+
+        #result-page-sudah .paper-message h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        #result-page-sudah .paper-message .heart {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            font-size: 4rem;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+            animation: none;
+        }
+
+        #result-page-sudah .paper-message .heart:nth-child(2) {
+            top: 60%;
+            left: 60%;
+            transform: rotate(10deg);
+        }
+        
+        #result-page-sudah .paper-message .heart:nth-child(3) {
+            top: 70%;
+            left: 10%;
+            transform: rotate(-5deg);
+        }
+
+        #result-page-belum .paper {
+            width: 500px;
+            height: 400px;
+            transform: rotate(5deg);
+        }
+
+        #result-page-belum .paper-message {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20%;
+        }
+        
+        #result-page-belum .paper-message p {
+            font-size: 2rem;
+        }
+
+        #result-page-belum .paper-message h2 {
+            font-size: 2.5rem;
+        }
+
+        #final-page {
+            flex-direction: row;
+        }
+
+        #final-page .text-container {
+            flex: 1;
+            text-align: left;
+            padding-left: 50px;
+        }
+        
+        #final-page .text-container p {
+            font-family: 'Pacifico', cursive;
+            font-size: 4rem;
+            line-height: 1.2;
+            color: #F8F4F0;
+            margin: 10px 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        #final-page .text-container p:nth-child(2) { animation-delay: 0.8s; }
+        #final-page .text-container p:nth-child(3) { animation-delay: 1.1s; }
+        #final-page .text-container p:nth-child(4) { animation-delay: 1.4s; }
+
+        #final-page .paper {
+            width: 450px;
+            height: 450px;
+            transform: rotate(5deg);
+        }
+        
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .heart {
+            font-size: 10rem;
+            color: #D34C4C;
+            animation: pulse 1s infinite;
+        }
+
+        .button {
+            background-color: #F8F4E6;
+            color: #4A2424;
+            border: 2px solid #9C6A2E;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            margin-top: 20px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #button-intro:active, #button-message:active, .question-buttons .button:active, #button-lanjut-sudah:active {
+            animation: clickEffect 0.3s forwards;
+        }
+
+        .question-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-left: 200px;
+        }
+
+        .question-buttons .button {
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-width: 4px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes clickEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        
+        /* --- Media Queries untuk Layar HP (maks 600px) --- */
+        @media (max-width: 600px) {
+            body {
+                overflow-x: hidden;
+                cursor: default;
+            }
+
+            .hearts-background {
+                display: none;
+            }
+
+            h1 {
+                font-size: 3rem;
+                margin-top: 10vh;
+            }
+            
+            .button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+
+            .envelope-container {
+                width: 90%;
+                height: auto;
+                position: static;
+                transform: none;
+                margin-top: 30px;
+                animation: none;
+            }
+
+            .envelope {
+                border-width: 2px;
+                box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .paper, #question-page .paper-container, #result-page-sudah .paper, #result-page-belum .paper {
+                width: 90%;
+                height: auto;
+                transform: none !important;
+            }
+            
+            .paper-message h2 {
+                font-size: 1.5rem;
+            }
+            
+            .paper-message p {
+                font-size: 1.2rem;
+            }
+
+            .question-buttons {
+                flex-direction: column;
+                margin-left: 0;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+            .question-buttons .button {
+                font-size: 1.2rem;
+                padding: 15px 40px;
+            }
+            
+            #final-page {
+                flex-direction: column;
+                padding-left: 0;
+            }
+
+            #final-page .text-container {
+                padding-left: 0;
+                text-align: center;
+                order: 2;
+            }
+            
+            #final-page .text-container p {
+                font-size: 2.5rem;
+            }
+
+            #final-page .envelope-container {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hearts-background"></div> 
+        
+        <div id="intro-page" class="page visible">
+            <h1 class="intro-text">Halo sayanggg</h1>
+            <div class="envelope-container">
+                <div class="envelope">
+                    <div class="seal">
+                        <div class="seal-hole"></div>
+                    </div>
+                </div>
+                <div class="paper" style="transform: rotate(5deg);">
+                    <div class="paper-hole-row"></div>
+                    <div class="paper-message">
+                        <span class="heart">❤️</span>
+                    </div>
+                </div>
+            </div>
+            <button class="button" id="button-intro">Klik disini jika sayang</button>
+        </div>
+
+        <div id="message-page" class="page">
+            <h1 class="message-text">Untuk My Love</h1>
+            <div class="envelope-container">
+                <div class="envelope">
+                    <div class="seal">
+                        <div class="seal-hole"></div>
+                    </div>
+                </div>
+                <div class="paper">
+                    <div class="paper-hole-row"></div>
+                    <div class="paper-lines"></div>
+                    <div class="paper-message">
+                        <h2>Good Morning</h2>
+                        <p>Saayang</p>
+                    </div>
+                </div>
+            </div>
+            <button class="button" id="button-message">Lanjut</button>
+        </div>
+
+        <div id="question-page" class="page">
+            <h1 class="question-text">Gimana?</h1>
+            <div class="paper-container">
+                <div class="paper">
+                    <div class="paper-hole-row"></div>
+                    <div class="paper-lines"></div>
+                    <div class="paper-message" style="padding-top: 10%;">
+                        <p>Kamu udah mandi apa</p>
+                        <p style="margin-bottom: 20px;">belomm</p>
+                        <span class="heart" style="font-size: 4rem;">❤️</span>
+                    </div>
+                </div>
+            </div>
+            <div class="question-buttons">
+                <button class="button" id="button-sudah">SUDah!!</button>
+                <button class="button" id="button-belum">BELUM!!</button>
+            </div>
+        </div>
+
+        <div id="result-page-sudah" class="page">
+            <h1 class="result-text">Yeaaayyy</h1>
+            <div class="paper">
+                <div class="paper-message">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <p style="text-align: left;">Wahhh kamu</p>
+                    <p style="text-align: left;">wangi banget bau vanilaa</p>
+                </div>
+            </div>
+            <button class="button" id="button-lanjut-sudah">Lanjut</button>
+        </div>
+
+        <div id="result-page-belum" class="page">
+            <h1 class="result-text" style="color: #4A2424;">Ihh</h1>
+            <div class="confetti"></div>
+            <div class="paper">
+                <div class="paper-hole-row"></div>
+                <div class="paper-lines"></div>
+                <div class="paper-message">
+                    <p>Ihh bau kamu kecut bangettt</p>
+                    <h2 style="font-size: 3rem;">MANDI SANAA</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div id="final-page" class="page">
+            <div class="text-container">
+                <p>Smangat</p>
+                <p>menjalani hari</p>
+                <p>sayangg</p>
+                <p>Jaga kesehatan yaaa.....</p>
+            </div>
+            <div class="envelope-container">
+                <div class="envelope">
+                    <div class="seal">
+                        <div class="seal-hole"></div>
+                    </div>
+                </div>
+                <div class="paper" style="transform: rotate(5deg);">
+                    <div class="paper-hole-row"></div>
+                    <div class="paper-message">
+                        <span class="heart">❤️</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('intro-page').classList.add('visible');
+            createHeartParticles(); 
+        });
+
+        function transitionPage(fromId, toId) {
+            const fromPage = document.getElementById(fromId);
+            const toPage = document.getElementById(toId);
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('visible');
+            });
+
+            fromPage.classList.remove('visible');
+            toPage.classList.add('visible');
+        }
+
+        document.getElementById('button-intro').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                transitionPage('intro-page', 'message-page');
+            }, 300);
+        });
+
+        document.getElementById('button-message').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                transitionPage('message-page', 'question-page');
+            }, 300);
+        });
+
+        document.getElementById('button-sudah').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                transitionPage('question-page', 'result-page-sudah');
+            }, 300);
+        });
+
+        document.getElementById('button-belum').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                transitionPage('question-page', 'result-page-belum');
+            }, 300);
+        });
+        
+        document.getElementById('button-lanjut-sudah').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                transitionPage('result-page-sudah', 'final-page');
+            }, 300);
+        });
+
+        // --- Fungsi untuk Partikel Hati yang Bergerak di Background ---
+        function createHeartParticles() {
+            const heartsBackground = document.querySelector('.hearts-background');
+            const numberOfHearts = 80; 
+
+            for (let i = 0; i < numberOfHearts; i++) {
+                const heart = document.createElement('span');
+                heart.classList.add('heart-particle');
+                
+                const characters = ['❤️', '💖', '✨', '🌟'];
+                heart.innerHTML = characters[Math.floor(Math.random() * characters.length)]; 
+
+                const startX = Math.random() * window.innerWidth;
+                const startY = window.innerHeight + Math.random() * 100; 
+                heart.style.left = `${startX}px`;
+                heart.style.top = `${startY}px`;
+
+                const initialSize = Math.random() * 15 + 10; 
+                heart.style.fontSize = `${initialSize}px`;
+
+                const initialOpacity = Math.random() * 0.6 + 0.3; 
+                heart.style.setProperty('--initial-opacity', initialOpacity);
+
+                const endX = Math.random() * window.innerWidth - (window.innerWidth / 2);
+                const endY = Math.random() * window.innerHeight * -1.5; 
+                const scaleEnd = Math.random() * 0.8 + 0.2; 
+                const rotateEnd = Math.random() * 720 - 360; 
+
+                heart.style.setProperty('--x-end', `${endX}px`);
+                heart.style.setProperty('--y-end', `${endY}px`);
+                heart.style.setProperty('--scale-end', scaleEnd);
+                heart.style.setProperty('--rotate-end', `${rotateEnd}deg`);
+
+                heart.style.animationDuration = `${Math.random() * 10 + 10}s`; 
+                heart.style.animationDelay = `${Math.random() * 8}s`; 
+
+                heartsBackground.appendChild(heart);
+            }
+        }
+
+        // --- Fungsi untuk Aura Hati yang Mengikuti Mouse ---
+        document.addEventListener('mousemove', (e) => {
+            const aura = document.createElement('span');
+            aura.classList.add('mouse-aura');
+            
+            const characters = ['❤️', '💖', '✨', '🌟'];
+            aura.innerHTML = characters[Math.floor(Math.random() * characters.length)]; 
+            
+            aura.style.left = e.clientX + 'px';
+            aura.style.top = e.clientY + 'px';
+            
+            document.body.appendChild(aura);
+            
+            // Hapus partikel setelah animasinya selesai
+            aura.addEventListener('animationend', () => {
+                aura.remove();
+            });
+        });
+    </script>
+</body>
+</html>
